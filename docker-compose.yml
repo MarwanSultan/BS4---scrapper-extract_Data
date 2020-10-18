@@ -1,0 +1,8 @@
+version: '3.4'
+
+services:
+  scrapperextract:
+    image: scrapperextract
+    build: .
+    ports:
+      - 3000:3000
