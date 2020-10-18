@@ -8,4 +8,4 @@ soup = bs.BeautifulSoup(data, 'lxml')
 
 for link in soup.find_all('a'):
     print(link.text)
-    print("Successful Test")
+    print("Pass")

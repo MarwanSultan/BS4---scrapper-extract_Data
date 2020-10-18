@@ -1,9 +1,22 @@
-FROM openjdk:8-jdk-alpine
-VOLUME /tmp
-ARG JAVA_OPTS
-ENV JAVA_OPTS=$JAVA_OPTS
-ADD target/scrapper-extract-0.0.1-SNAPSHOT.jar scrapperextract.jar
-EXPOSE 3000
-ENTRYPOINT exec java $JAVA_OPTS -jar scrapperextract.jar
-# For Spring-Boot project, use the entrypoint below to reduce Tomcat startup time.
-#ENTRYPOINT exec java $JAVA_OPTS -Djava.security.egd=file:/dev/./urandom -jar scrapperextract.jar
+# For more information, please refer to https://aka.ms/vscode-docker-python
+FROM python:3.8-slim-buster
+
+# Keeps Python from generating .pyc files in the container
+ENV PYTHONDONTWRITEBYTECODE 1
+
+# Turns off buffering for easier container logging
+ENV PYTHONUNBUFFERED 1
+
+# Install pip requirements
+ADD requirements.txt .
+RUN python -m pip install -r requirements.txt
+
+WORKDIR /app
+ADD . /app
+
+# Switching to a non-root user, please refer to https://aka.ms/vscode-docker-python-user-rights
+RUN useradd appuser && chown -R appuser /app
+USER appuser
+
+# During debugging, this entry point will be overridden. For more information, please refer to https://aka.ms/vscode-docker-python-debug
+CMD ["python", "src\test\java\com\python\scrapper\Extract_Data.py"]
